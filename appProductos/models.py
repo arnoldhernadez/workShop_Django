@@ -1,5 +1,5 @@
 from django.db import models 
- 
+from appUsuarios.models import Usuario
 # Create your models here. 
 class Categoria(models.Model): 
     descripCategoria = models.CharField(max_length=100, null=False) 
@@ -8,7 +8,7 @@ class Categoria(models.Model):
     class Meta:  #se utiliza para cambiar nombres en la consola de administración. 
         verbose_name = 'categorias' 
         verbose_name_plural = 'categorias de productos' 
- 
+
 class Producto(models.Model): 
     nombre = models.CharField(max_length=100, null=False)     
     descripcion = models.CharField(max_length=300, null=True) 
@@ -21,8 +21,19 @@ class Producto(models.Model):
     def __str__(self):  #para utilizado para definir que atributos (columnas) mostrar cuando se esté desplegando un objeto (fila). 
         return self.nombre 
 
- 
+class Carro(models.Model): 
+    ESTADO_PROD = (
+        ('activo', 'activo'),
+        ('comprado', 'comprado'),
+        ('anulado', 'anulado'),
+    )
 
- 
+
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=False) 
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=False) 
+    cantidad = models.IntegerField(null=False, default= 1)
+    valUnit = models.DecimalField(max_digits=8, decimal_places=2)
+    estado = models.CharField(max_length=20, choices=ESTADO_PROD, default='activo')
+
 
 
